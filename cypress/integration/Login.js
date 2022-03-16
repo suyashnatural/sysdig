@@ -42,4 +42,20 @@ describe('login', function () {
             expect(txt).to.contains('Please fill out this field.');
         })
     })
+
+    it('Test Forgot Password Link - Invalid', function () {
+        cy.get('[class="ember-view login__link"]').click()
+        cy.get('[class="ember-view ember-text-field login__form-field"]').type('abcd.com').type('{enter}')
+        cy.on('window:alert', (txt) => {
+            expect(txt).to.contains("Please include an '@' in the email email address. 'abcd.com' is missing an '@'. ");
+        })
+    })
+
+    it('Test Forgot Password Link - Valid', function () {
+        cy.get('[class="ember-view login__link"]').click()
+        cy.get('[class="ember-view ember-text-field login__form-field"]').type('abcd@gmail.com').type('{enter}')
+        cy.get('[class="login__feedback-message"]').invoke('text').then((text) => {
+            expect(text.trim()).equal('We just sent the password reset email to abcd@gmail.com!Please check your inbox and follow the instructions to reset your password.')
+        })
+    })
 })
